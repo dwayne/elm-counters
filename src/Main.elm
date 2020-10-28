@@ -3,6 +3,7 @@ module Main exposing (main)
 
 import Browser
 import Html exposing (Html, button, div, text)
+import Html.Events exposing (onClick)
 
 
 main : Program () Model Msg
@@ -21,17 +22,25 @@ init : Model
 init = 0
 
 
-type alias Msg = Never
+type Msg
+    = Decrement
+    | Increment
 
 
 update : Msg -> Model -> Model
-update msg model = model
+update msg model =
+    case msg of
+        Decrement ->
+            model - 1
+
+        Increment ->
+            model + 1
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ button [] [ text "-" ]
+        [ button [ onClick Decrement ] [ text "-" ]
         , text (String.fromInt model)
-        , button [] [ text "+" ]
+        , button [ onClick Increment ] [ text "+" ]
         ]
