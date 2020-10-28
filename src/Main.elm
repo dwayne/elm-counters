@@ -3,6 +3,7 @@ module Main exposing (main)
 
 import Browser
 import Html exposing (Html, button, div, text)
+import Html.Attributes exposing (disabled)
 import Html.Events exposing (onClick)
 import Random
 
@@ -162,7 +163,7 @@ counterView decrement increment reset remove counter =
 
         NonNegative n ->
             div []
-                [ button [ onClick decrement ] [ text "-" ]
+                [ button [ onClick decrement, disabled (n == 0) ] [ text "-" ]
                 , text (String.fromInt n)
                 , button [ onClick increment ] [ text "+" ]
                 , button [ onClick reset ] [ text "Reset" ]
