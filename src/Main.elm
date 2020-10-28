@@ -4,6 +4,7 @@ module Main exposing (main)
 import Browser
 import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
+import Random
 
 
 main : Program () Model Msg
@@ -33,7 +34,8 @@ type Msg
     = Decrement Int
     | Increment Int
     | Reset Int
-    | Add
+    | Add Int
+    | AddRandom
     | Remove Int
 
 
@@ -55,9 +57,14 @@ update msg model =
             , Cmd.none
             )
 
-        Add ->
-            ( 0 :: model
+        Add n ->
+            ( n :: model
             , Cmd.none
+            )
+
+        AddRandom ->
+            ( model
+            , Random.generate Add (Random.int -10 10)
             )
 
         Remove i ->
@@ -69,7 +76,8 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ onClick Add ] [ text "Add" ]
+        [ button [ onClick (Add 0) ] [ text "Add" ]
+        , button [ onClick AddRandom ] [ text "Add Random" ]
         , div [] (List.indexedMap viewCounter model)
         ]
 
