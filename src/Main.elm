@@ -8,10 +8,11 @@ import Html.Events exposing (onClick)
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
+    Browser.element
         { init = init
         , view = view
         , update = update
+        , subscriptions = always Sub.none
         }
 
 
@@ -21,8 +22,11 @@ type alias Model = List Counter
 type alias Counter = Int
 
 
-init : Model
-init = [0, 5, 10]
+init : () -> (Model, Cmd Msg)
+init _ =
+    ( [0, 5, 10]
+    , Cmd.none
+    )
 
 
 type Msg
@@ -33,23 +37,33 @@ type Msg
     | Remove Int
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         Decrement i ->
-            listUpdateAt i (\counter -> counter - 1) model
+            ( listUpdateAt i (\counter -> counter - 1) model
+            , Cmd.none
+            )
 
         Increment i ->
-            listUpdateAt i (\counter -> counter + 1) model
+            ( listUpdateAt i (\counter -> counter + 1) model
+            , Cmd.none
+            )
 
         Reset i ->
-            listUpdateAt i (always 0) model
+            ( listUpdateAt i (always 0) model
+            , Cmd.none
+            )
 
         Add ->
-            0 :: model
+            ( 0 :: model
+            , Cmd.none
+            )
 
         Remove i ->
-            listIndexedFilter (\j _ -> j /= i) model
+            ( listIndexedFilter (\j _ -> j /= i) model
+            , Cmd.none
+            )
 
 
 view : Model -> Html Msg
