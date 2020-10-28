@@ -1,9 +1,37 @@
 module Main exposing (main)
 
 
-import Html exposing (Html, text)
+import Browser
+import Html exposing (Html, button, div, text)
 
 
-main : Html msg
+main : Program () Model Msg
 main =
-    text "Hello, world!"
+    Browser.sandbox
+        { init = init
+        , view = view
+        , update = update
+        }
+
+
+type alias Model = Int
+
+
+init : Model
+init = 0
+
+
+type alias Msg = Never
+
+
+update : Msg -> Model -> Model
+update msg model = model
+
+
+view : Model -> Html Msg
+view model =
+    div []
+        [ button [] [ text "-" ]
+        , text (String.fromInt model)
+        , button [] [ text "+" ]
+        ]
