@@ -35,13 +35,13 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Decrement i ->
-            List.indexedMap (\j counter -> if j == i then counter - 1 else counter) model
+            listUpdateAt i (\counter -> counter - 1) model
 
         Increment i ->
-            List.indexedMap (\j counter -> if j == i then counter + 1 else counter) model
+            listUpdateAt i (\counter -> counter + 1) model
 
         Reset i ->
-            List.indexedMap (\j counter -> if j == i then 0 else counter) model
+            listUpdateAt i (always 0) model
 
 
 view : Model -> Html Msg
@@ -57,3 +57,11 @@ viewCounter i counter =
         , button [ onClick (Increment i) ] [ text "+" ]
         , button [ onClick (Reset i) ] [ text "Reset" ]
         ]
+
+
+-- HELPERS
+
+
+listUpdateAt : Int -> (a -> a) -> List a -> List a
+listUpdateAt i f =
+    List.indexedMap (\j x -> if j == i then f x else x)
