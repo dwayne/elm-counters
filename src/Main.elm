@@ -30,6 +30,7 @@ type Msg
     | Increment Int
     | Reset Int
     | Add
+    | Remove Int
 
 
 update : Msg -> Model -> Model
@@ -47,6 +48,9 @@ update msg model =
         Add ->
             0 :: model
 
+        Remove i ->
+            listIndexedFilter (\j _ -> j /= i) model
+
 
 view : Model -> Html Msg
 view model =
@@ -63,6 +67,7 @@ viewCounter i counter =
         , text (String.fromInt counter)
         , button [ onClick (Increment i) ] [ text "+" ]
         , button [ onClick (Reset i) ] [ text "Reset" ]
+        , button [ onClick (Remove i) ] [ text "Remove" ]
         ]
 
 
@@ -72,3 +77,21 @@ viewCounter i counter =
 listUpdateAt : Int -> (a -> a) -> List a -> List a
 listUpdateAt i f =
     List.indexedMap (\j x -> if j == i then f x else x)
+
+
+listIndexedFilter : (Int -> a -> Bool) -> List a -> List a
+listIndexedFilter =
+    listIndexedFilterHelper 0
+
+
+listIndexedFilterHelper : Int -> (Int -> a -> Bool) -> List a -> List a
+listIndexedFilterHelper i pred xs =
+    case xs of
+        [] ->
+            []
+
+        (x::rest) ->
+            if pred i x then
+                x :: listIndexedFilterHelper (i + 1) pred rest
+            else
+                listIndexedFilterHelper (i + 1) pred rest
