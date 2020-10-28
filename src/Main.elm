@@ -15,37 +15,45 @@ main =
         }
 
 
-type alias Model = Int
+type alias Model = List Counter
+
+
+type alias Counter = Int
 
 
 init : Model
-init = 0
+init = [0, 5, 10]
 
 
 type Msg
-    = Decrement
-    | Increment
-    | Reset
+    = Decrement Int
+    | Increment Int
+    | Reset Int
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Decrement ->
-            model - 1
+        Decrement i ->
+            List.indexedMap (\j counter -> if j == i then counter - 1 else counter) model
 
-        Increment ->
-            model + 1
+        Increment i ->
+            List.indexedMap (\j counter -> if j == i then counter + 1 else counter) model
 
-        Reset ->
-            0
+        Reset i ->
+            List.indexedMap (\j counter -> if j == i then 0 else counter) model
 
 
 view : Model -> Html Msg
 view model =
+    div [] (List.indexedMap viewCounter model)
+
+
+viewCounter : Int -> Counter -> Html Msg
+viewCounter i counter =
     div []
-        [ button [ onClick Decrement ] [ text "-" ]
-        , text (String.fromInt model)
-        , button [ onClick Increment ] [ text "+" ]
-        , button [ onClick Reset ] [ text "Reset" ]
+        [ button [ onClick (Decrement i) ] [ text "-" ]
+        , text (String.fromInt counter)
+        , button [ onClick (Increment i) ] [ text "+" ]
+        , button [ onClick (Reset i) ] [ text "Reset" ]
         ]
