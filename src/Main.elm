@@ -29,6 +29,7 @@ type Msg
     = Decrement Int
     | Increment Int
     | Reset Int
+    | Add
 
 
 update : Msg -> Model -> Model
@@ -43,10 +44,16 @@ update msg model =
         Reset i ->
             listUpdateAt i (always 0) model
 
+        Add ->
+            0 :: model
+
 
 view : Model -> Html Msg
 view model =
-    div [] (List.indexedMap viewCounter model)
+    div []
+        [ button [ onClick Add ] [ text "Add" ]
+        , div [] (List.indexedMap viewCounter model)
+        ]
 
 
 viewCounter : Int -> Counter -> Html Msg
